@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roblox Oyun İsmi Bulma</title>
+</head>
+<body>
+    <h1>Roblox Oyun İsmi Bul</h1>
+    <p>Bir Roblox kullanıcı ID'si girin ve o kullanıcının şu anda oynadığı oyunu bulun.</p>
+    <form id="form">
+        <label for="id">ID:</label>
+        <input type="text" id="id" name="id" required>
+        <button type="submit">Ara</button>
+    </form>
+    <div id="oyun-ismi"></div>
+
+    <script>
+        const form = document.getElementById('form');
+        const oyunIsmiDiv = document.getElementById('oyun-ismi');
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const id = document.getElementById('id').value;
+
+            fetch(`https://api.roblox.com/users/${id}/status`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.presence) {
+                        oyunIsmiDiv.textContent = `Şu anda oynanan oyun: ${data.presence.name}`;
+                    } else {
+                        oyunIsmiDiv.textContent = "Kullanıcı şu anda herhangi bir oyunda değil.";
+                    }
+                })
+                .catch(error => {
+                    oyunIsmiDiv.textContent = "Hata: Kullanıcı ID'si geçersiz veya API'ye erişimde sorun var.";
+                });
+        });
+    </script>
+</body>
+</html>
